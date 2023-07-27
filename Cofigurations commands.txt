@@ -1,0 +1,91 @@
+
+# For Creating Seperate Vlan
+# Done in Layer 2 Switch
+
+config t
+int range fa0/1-24
+switchport mode access
+switchport access vlan 10
+do wr
+#similarly do for other layer 2 switches for providing access
+
+# Multiswitch Access point to all vlans
+
+en
+config t
+int gig1/0/2
+switchport access vlan 30
+#Similarly do for all the VLAN's
+
+
+# Enabling the transmission of multiple VLANs over a single physical link.
+
+int gig1/0/1
+switchport trunk encapsulation dot1q
+switchport mode trunk
+ex
+do wr
+
+# Configuring main campus router so to provide DHCP ip to all the pc's
+# For VLAN 10
+en
+config t
+int gig0/0.10
+encapsulation dot1Q 10
+ip address 192.168.1.1 255.255.255.0
+
+#For VLAN 80 
+en
+config t
+int gig0/0.80
+encapsulation dot1Q 80
+ip address 192.168.8.1 255.255.255.0
+
+# Similarly do for other VLAN's
+
+# Creating pools for all the depts so to provide DHCP services
+# creating Account Office pool
+service dhcp
+ip dhcp pool acc-pool
+network 192.168.1.0 255.255.255.0
+default-router 192.168.1.1
+dns-server 192.168.1.1
+ex
+
+# DHCP for Admission office
+service dhcp
+ip dhcp pool admission-pool
+network 192.168.2.0 255.255.255.0
+default-router 192.168.2.1
+dns-server 192.168.2.1
+ex
+#
+ip dhcp pool admin-pool
+network 192.168.8.0 255.255.255.0
+default-router 192.168.8.1
+dns-server 192.168.8.1
+ex
+
+# Enabling RIP (Routing Information protocol) so that branch to branch communication can be done
+
+en
+config t
+router rip
+version 2
+network 10.10.10.0
+network ...
+ex
+do wr
+
+# VPN Tunneling 
+#Done in Routers
+en
+config t
+interface tunnel 1
+ip address 172.16.1.1 255.255.255.252
+tunnel source Se/1/0
+tunnel destination 10.10.10.6
+no shut
+
+
+
