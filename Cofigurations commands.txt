@@ -10,12 +10,12 @@ do wr
 #similarly do for other layer 2 switches for providing access
 
 # Multiswitch Access point to all vlans
-
+# For VLAN 30
 en
 config t
 int gig1/0/2
-switchport access vlan 30
-#Similarly do for all the VLAN's
+switchport access vlan 30 
+# Similarly do for all the VLAN's
 
 
 # Enabling the transmission of multiple VLANs over a single physical link.
@@ -26,7 +26,7 @@ switchport mode trunk
 ex
 do wr
 
-# Configuring main campus router so to provide DHCP ip to all the pc's
+# Configuring Main Campus router so to provide DHCP ip to all the pc's
 # For VLAN 10
 en
 config t
@@ -43,7 +43,8 @@ ip address 192.168.8.1 255.255.255.0
 
 # Similarly do for other VLAN's
 
-# Creating pools for all the depts so to provide DHCP services
+# Creating pools for all the depts so to provide DHCP services (So to Auto Assign the IP's to all the Systems)
+# Configurations done in Main Campus Router
 # creating Account Office pool
 service dhcp
 ip dhcp pool acc-pool
@@ -59,7 +60,8 @@ network 192.168.2.0 255.255.255.0
 default-router 192.168.2.1
 dns-server 192.168.2.1
 ex
-#
+
+# For Admin 
 ip dhcp pool admin-pool
 network 192.168.8.0 255.255.255.0
 default-router 192.168.8.1
@@ -67,7 +69,7 @@ dns-server 192.168.8.1
 ex
 
 # Enabling RIP (Routing Information protocol) so that branch to branch communication can be done
-
+# Done in Main Campus Router
 en
 config t
 router rip
@@ -76,6 +78,7 @@ network 10.10.10.0
 network ...
 ex
 do wr
+#Similarly do with Cloud Router and add 10.10.10.0 , 20.0.0.0 in RIP
 
 # VPN Tunneling 
 #Done in Routers
@@ -86,6 +89,9 @@ ip address 172.16.1.1 255.255.255.252
 tunnel source Se/1/0
 tunnel destination 10.10.10.6
 no shut
+
+# Firewall Configurations Done Manually
+For FTP server, added a firewall which will allow ICMP for only admin systems i.e. (192.168.8.0 IP patterns) and will deny ICMP for rest all Systems!
 
 
 
